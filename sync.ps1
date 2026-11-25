@@ -33,9 +33,17 @@ $local = (git rev-parse --short HEAD).Trim()
 
 # 2. Push.
 Log "[push]   mengirim ke $(git remote get-url origin) ..." Gray
-$pushOut = git push origin main 2>&1
+# git menulis progres ke stderr; Windows PowerShell 5.1 mengubah baris stderr
+# native command menjadi ErrorRecord, sehingga 2>&1 saja tetap memunculkan
+# "git : To https://..." merah. Arahkan ke stdout di level proses lalu pecah
+# per baris supaya tidak ada objek error yang lolos.
+$prevEap = $ErrorActionPreference
+$ErrorActionPreference = 'Continue'
+$pushOut = (& cmd /c "git push origin main 2>&1") | Out-String
+$ErrorActionPreference = $prevEap
 $pushCode = $LASTEXITCODE
-$pushOut | Where-Object { $_ -notmatch '^(remote:|To https)' } | ForEach-Object { Log "         $_" DarkGray }
+$pushOut -split "`r?`n" | Where-Object { $_ -and $_ -notmatch '^(remote:|To https://)' } |
+    ForEach-Object { Log "         $_" DarkGray }
 
 if ($pushCode -ne 0) {
     Log "[push]   GAGAL (exit $pushCode). Lihat SINKRONISASI.md untuk penyebab umum." Red
