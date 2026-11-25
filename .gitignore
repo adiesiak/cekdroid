@@ -32,3 +32,5 @@ Thumbs.db
 tools/build/
 
 sync-push.log
+
+STATUS.log
