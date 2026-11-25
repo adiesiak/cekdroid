@@ -34,3 +34,5 @@ tools/build/
 sync-push.log
 
 STATUS.log
+
+auto-sync.log
