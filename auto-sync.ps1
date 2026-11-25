@@ -1,4 +1,4 @@
-﻿# Auto-sync CekDroid: push otomatis dari luar sandbox agen.
+# Auto-sync CekDroid: push otomatis dari luar sandbox agen.
 # Dijalankan oleh scheduled task. Aman untuk dijalankan berulang.
 $repo = 'C:\Users\chare\Documents\deepseek-harness\default-workspace\cekdroid-repo'
 $log  = Join-Path $repo 'auto-sync.log'
@@ -8,8 +8,11 @@ function Say($m) { "$(Get-Date -Format 'yyyy-MM-dd HH:mm:ss') $m" | Tee-Object -
 
 # 1. Ambil commit terbaru dari agen (repo ini bukan layanan, jadi fetch diabaikan).
 # 2. Sinkronkan commit yang belum terkirim.
-$pending = @(git rev-list --count '@{u}..HEAD' 2>$null)
-if (-not $pending -or $pending[0] -eq '0') { return }
+#    Kalau upstream belum ada atau rev-list gagal, jangan berhenti diam-diam:
+#    tetap lanjut supaya commit baru tidak tertinggal tanpa jejak.
+$pendingRaw = (& cmd /c "git rev-list --count @{u}..HEAD 2>&1") | Out-String
+$pending = ($pendingRaw -split "`r?`n" | Where-Object { $_ -match '^\d+$' } | Select-Object -First 1)
+if ($pending -eq '0') { return }
 
 git add -A
 if (@(git diff --cached --name-only).Count -gt 0) {

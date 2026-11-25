@@ -1,4 +1,4 @@
-# Sinkronisasi CekDroid ke GitHub.
+﻿# Sinkronisasi CekDroid ke GitHub.
 #
 # Penggunaan:
 #   .\sync.ps1                  -> commit sisa perubahan, push, tulis SYNC.md
@@ -85,7 +85,7 @@ $url = (git remote get-url origin) -replace '\.git$', ''
 
 git add SYNC.md
 git commit -q -m "sync: catat hasil sinkronisasi $local"
-if ($LASTEXITCODE -eq 0) { git push origin main 2>&1 | Out-Null }
+if ($LASTEXITCODE -eq 0) { $null = & cmd /c "git push origin main 2>&1" }
 
 Log "[push]   sukses -> $local" Green
 Log "[bukti]  SYNC.md ditulis. Bilang 'cek SYNC.md' ke agen." Green
