@@ -30,3 +30,5 @@ cekdroid-android/dist/
 Thumbs.db
 *~
 tools/build/
+
+sync-push.log
