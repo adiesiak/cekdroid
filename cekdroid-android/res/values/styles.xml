@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--
+      No action bar anywhere: every screen draws its own bar through
+      Chrome.bar(), which is the only way the header can carry the brand mark
+      and place its actions on the title line instead of stacking a second row.
+    -->
+    <style name="AppTheme" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/app_bg</item>
+        <item name="android:statusBarColor">@color/app_bg</item>
+        <item name="android:navigationBarColor">@color/app_bg</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:colorAccent">@color/ic_launcher_background</item>
+    </style>
+
+    <style name="AppTheme.Light" parent="@android:style/Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/app_bg</item>
+        <item name="android:statusBarColor">@color/app_bg</item>
+        <item name="android:navigationBarColor">@color/app_bg</item>
+        <item name="android:colorAccent">@color/ic_launcher_background</item>
+    </style>
+
+    <!--
+      Window used before MainActivity draws its first frame. The window
+      background is the app background, so the handoff from the splash to the
+      dashboard has no white flash between them.
+    -->
+    <style name="AppTheme.Splash" parent="@android:style/Theme.Material.NoActionBar">
+        <item name="android:windowBackground">@color/app_bg</item>
+        <item name="android:statusBarColor">@color/app_bg</item>
+        <item name="android:navigationBarColor">@color/app_bg</item>
+        <item name="android:windowFullscreen">false</item>
+    </style>
+</resources>

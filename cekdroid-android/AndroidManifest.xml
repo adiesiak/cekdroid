@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="ai.cekdroid"
+    android:versionCode="2"
+    android:versionName="0.4.0">
+
+    <uses-sdk android:minSdkVersion="26" android:targetSdkVersion="34" />
+
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS" />
+    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <!--
+      Android 13+ hides a foreground notification unless this is granted. The
+      CPU/RAM monitor lives in that notification, so without it the service
+      would run with nothing visible and no way to stop it from the shade.
+    -->
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+
+    <!--
+      Parity with DevInfo's Tes and Alat tabs. Each of these is requested at the
+      moment the feature is opened, never at startup, and a denied grant leaves
+      the screen working with an explanation rather than blank.
+    -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+
+    <!--
+      Read access to MediaStore collections (photos, video, audio, downloads).
+
+      Scoped storage still gates other apps' media rows behind this grant on
+      Android 10 through 12L, which is the range this app targets in practice;
+      from Android 13 the READ_MEDIA_* split replaces it and MediaStore queries
+      for an app's own indexed media work without a prompt. The maxSdkVersion
+      keeps the deprecated permission off newer builds instead of asking for
+      something the platform ignores.
+    -->
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
+    <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
+    <uses-feature android:name="android.hardware.telephony" android:required="false" />
+    <uses-feature android:name="android.hardware.camera" android:required="false" />
+    <uses-feature android:name="android.hardware.wifi" android:required="false" />
+
+    <!--
+      Window background is the app background colour, so the gap between the
+      launcher tap and the first drawn frame is the same dark surface instead of
+      a white flash. MainActivity then fades its own splash overlay out on top.
+    -->
+    <application
+        android:label="CekDroid"
+        android:icon="@mipmap/ic_launcher"
+        android:roundIcon="@mipmap/ic_launcher"
+        android:allowBackup="false"
+        android:debuggable="true"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:label="CekDroid"
+            android:theme="@style/AppTheme.Splash"
+            android:configChanges="uiMode">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!--
+          Headless report writer for the CLI (`adb shell am start -n
+          ai.cekdroid/.DumpActivity`). It stays exported because a shell process
+          outside the app has to be able to launch it, and the CLI's `app`
+          subcommand depends on that.
+
+          Scope of the exposure: it writes one JSON file containing device facts
+          the app itself displays, into the app's own files directory. It cannot
+          read app data, cannot write outside its sandbox, and requires an ADB
+          connection to start (exported activities are not reachable by other
+          apps without a matching intent filter). If that is ever too broad, the
+          switch is to mark it `exported="false"` and have the CLI trigger the
+          dump through MainActivity instead.
+        -->
+        <activity
+            android:name=".DumpActivity"
+            android:exported="true"
+            android:label="CekDroid dump" />
+        <activity
+            android:name=".test.ScreenTestActivity"
+            android:exported="false"
+            android:label="Tes Layar"
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".test.ButtonTestActivity"
+            android:exported="false"
+            android:label="Tes Tombol" />
+        <activity
+            android:name=".test.SensorTestActivity"
+            android:exported="false"
+            android:label="Sensor Realtime" />
+        <activity
+            android:name=".test.VibrateTestActivity"
+            android:exported="false"
+            android:label="Tes Getar" />
+        <activity
+            android:name=".test.GnssTestActivity"
+            android:exported="false"
+            android:label="GPS &amp; Satelit" />
+        <activity
+            android:name=".test.TorchTestActivity"
+            android:exported="false"
+            android:label="Senter" />
+        <activity
+            android:name=".test.SpeakerTestActivity"
+            android:exported="false"
+            android:label="Pengeras suara" />
+        <activity
+            android:name=".test.MicrophoneTestActivity"
+            android:exported="false"
+            android:label="Mikrofon" />
+        <activity
+            android:name=".test.BluetoothTestActivity"
+            android:exported="false"
+            android:label="Bluetooth" />
+        <activity
+            android:name=".test.FingerprintTestActivity"
+            android:exported="false"
+            android:label="Sidik jari" />
+        <activity
+            android:name=".test.SingleSensorTestActivity"
+            android:exported="false"
+            android:label="Sensor" />
+        <activity
+            android:name=".test.LevelToolActivity"
+            android:exported="false"
+            android:label="Waterpas gelembung" />
+        <activity
+            android:name=".test.CompassActivity"
+            android:exported="false"
+            android:label="Kompas" />
+        <activity
+            android:name=".test.SoundMeterActivity"
+            android:exported="false"
+            android:label="Deteksi desibel" />
+        <activity
+            android:name=".test.DataUsageActivity"
+            android:exported="false"
+            android:label="Penggunaan data" />
+        <activity
+            android:name=".test.ScreenTimeActivity"
+            android:exported="false"
+            android:label="Waktu penggunaan layar" />
+        <activity
+            android:name=".test.WidgetActivity"
+            android:exported="false"
+            android:label="Widget" />
+        <activity
+            android:name=".test.IpLookupActivity"
+            android:exported="false"
+            android:label="Pencarian IP" />
+        <activity
+            android:name=".test.AppAnalysisActivity"
+            android:exported="false"
+            android:label="Analisis aplikasi" />
+        <activity
+            android:name=".test.StorageCleanActivity"
+            android:exported="false"
+            android:label="Pembersihan penyimpanan" />
+        <activity
+            android:name=".settings.TabManagerActivity"
+            android:exported="false"
+            android:label="Pilih Tab" />
+        <activity
+            android:name=".settings.ThemeSettingsActivity"
+            android:exported="false"
+            android:label="Tampilan" />
+        <activity
+            android:name=".ui.ListActivity"
+            android:exported="false"
+            android:label="Daftar" />
+        <activity
+            android:name=".test.StorageAnalyzeActivity"
+            android:exported="false"
+            android:label="Analisis Penyimpanan" />
+        <activity
+            android:name=".test.BatteryChartActivity"
+            android:exported="false"
+            android:label="Baterai Realtime" />
+        <activity
+            android:name=".test.ChargingTestActivity"
+            android:exported="false"
+            android:label="Uji pengisian daya" />
+        <activity
+            android:name=".test.AppExportActivity"
+            android:exported="false"
+            android:label="Export Ikon &amp; APK" />
+        <service
+            android:name=".overlay.FloatingMonitorService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse" />
+        <!--
+          Serves exactly one cache folder so the share sheet can read the
+          screenshot the app just wrote. file:// URIs are rejected by the
+          platform since API 24 and this build has no AndroidX FileProvider.
+        -->
+        <provider
+            android:name=".ui.ShareProvider"
+            android:authorities="ai.cekdroid.share"
+            android:exported="false"
+            android:grantUriPermissions="true" />
+    </application>
+</manifest>

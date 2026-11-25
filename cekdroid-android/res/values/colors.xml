@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="ic_launcher_background">#29A7A8</color>
+    <!-- Matches Palette.BG so the window background and the first frame of the
+         splash are the same colour; a mismatch showed up as a white flash. -->
+    <color name="app_bg">#0E1416</color>
+    <color name="app_bg_light">#F4F7F6</color>
+</resources>

@@ -1,0 +1,32 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+build/
+dist/
+
+# laporan hasil diagnosa
+laporan.*
+*.jsonl
+
+# --- Android ---
+*.apk
+*.aab
+*.keystore
+*.jks
+*.idsig
+# hasil `python build_apk.py`
+cekdroid-android/build/
+cekdroid-android/gen/
+cekdroid-android/classes/
+cekdroid-android/dist/
+
+# --- editor / OS ---
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+*~
+tools/build/
